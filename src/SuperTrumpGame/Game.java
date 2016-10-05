@@ -12,13 +12,13 @@ public class Game {
     public GamePlayers[] players;
     public ArrayList<GameCards> hand;
     public GameDeck deck = new GameDeck();
-//    public ArrayList<CurrentCard> play;
+    public ArrayList<GameCards> play;
 
     public Game(int noPlayers) {
         this.noPlayers = noPlayers;
         hand = new ArrayList<>();
         players = new GamePlayers[noPlayers];
-        //play = new ArrayList<CurrentCard>();
+        play = new ArrayList<>();
     }
 
     public int selectRandDealer() {
@@ -47,9 +47,17 @@ public class Game {
     }
     public void playCard(GameCards card){
         hand.remove(card);
+        play.add(card);
     }
 
-    public void addCard() {
+    public void addCard(int i){
+        //hand.add(card);
+        GamePlayers player = players[i];
+        ArrayList<GameCards> cards = deck.getCard(1);
+        player.setCards(cards);
+    }
+
+    public void startingHand() {
         players = new GamePlayers[noPlayers];
             for(int i = 0; i < noPlayers; i++){
                 players[i] = new GamePlayers("Player " + (i+1));
@@ -59,6 +67,7 @@ public class Game {
             player.setCards(cards);
         }
     }
+
     public int switchPlayer(int currentPlayer) {
         currentPlayer++;
         if (currentPlayer >= players.length){
@@ -98,22 +107,10 @@ public class Game {
             String what = input.nextLine();
             if(Objects.equals(what, "pass")) {
                 //player[currentPlayer] = true;
+                addCard(currentPlayer);
                 round++;
             }
-                //player[currentPlayer] = true;
-            currentPlayer ++;
-            if (currentPlayer >= players.length){
-                currentPlayer = 0;
-                }
+            currentPlayer = switchPlayer(currentPlayer);
         }
     }
-    /*public void startingHand(){
-        int STARTING_HAND = 2;
-        for (int i = 0; i < STARTING_HAND; i++) {
-            for (int j = 0; j < players.length; j++) {
-                addCard(hand.get(i), players[j]);
-            }
-        }
-    }*/
-
 } //end of class NewGame

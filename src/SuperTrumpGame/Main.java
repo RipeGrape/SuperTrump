@@ -1,13 +1,16 @@
 package SuperTrumpGame;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
+
+        System.out.println("Shuffled deck \n");
+
         menu();
-	    startGame();
-
-
+        playGame();
     }
 
     private static void menu() {
@@ -16,11 +19,22 @@ public class Main {
         System.out.println("3. Exit Game");
     }
 
-    private static void startGame() {
+    private static void playGame() {
         int noPlayers = getNoPlayers();
-        NewGame game = new NewGame(noPlayers);
-        game.selectRandDealer();
-//        game.dealCards();
+        Game game = new Game(noPlayers);
+        GameDeck deck = new GameDeck();
+        deck.shuffle();
+        int currentPlayer = game.selectRandDealer();
+        game.getSelectedPlayers(noPlayers);
+        game.startingHand();
+
+        boolean gameFinish = false;
+        while (gameFinish == false){
+            //System.out.print(game.playerHand());
+            //System.out.println(deck.display());
+            game.gameRound();
+            gameFinish = true;
+        }
     }
 
     private static int getNoPlayers() {

@@ -6,7 +6,6 @@ import java.util.Random;
 public class GameDeck {
     private static final int NUM_DECK_INIT = 12;
     private Random rand = new Random();
-    private int cardsDrawn = 0;
     public ArrayList<GameCards> card;
     private ArrayList<GamePlayers> players;
     //NONE = 1;
@@ -56,10 +55,9 @@ public class GameDeck {
             card.add(new GameCards("Zircon", 7.5, 4.7, 4, 2, 3)); // card 12
     }
 
-    public ArrayList<GameCards> shuffle(){
+    public void shuffle(){
         // Shuffles the deck
         Collections.shuffle(card);
-        return card;
         /*for (int i = NUM_DECK_INIT - 1; i > 0; i--) {
             int randCard = rand.nextInt(i);
             GameCards first = card.get(randCard);
@@ -80,12 +78,11 @@ public class GameDeck {
 
     public GameCards drawCards() {
         return card.remove(0);
-
-//        return card.get(0);
-        /* GameCards draw = card.remove(cardsDrawn);
+        //return card;
+        /*GameCards draw = card.remove(0);
         card.add(draw);
-        cardsDrawn++;
-        return cardsDrawn;*/
+        return card;
+*/
     }
 
     /*    public int cardsLeft(){

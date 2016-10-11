@@ -1,7 +1,5 @@
 package SuperTrumpGame;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
 
 public class GamePlayers {
     private ArrayList<GameCards> cards;
@@ -11,9 +9,17 @@ public class GamePlayers {
         this.playerId = s;
     }
 
-    public void setCards(ArrayList<GameCards> cards) {
-        this.cards = cards;
+    public void setCards(ArrayList<GameCards> card) {
+        this.cards = card;
     }
+
+    public void addCard(GameCards card){
+        cards.add(card);
+    }
+    public GameCards removeCard(int card){
+        return cards.remove(card);
+    }
+    public GameCards compareCard(int card){return cards.get(card);}
 
     public String toString(){
         String value = playerId + ": \n";
@@ -21,7 +27,6 @@ public class GamePlayers {
         {
             value += i.toString();
         }
-
         return value;
     }
 }

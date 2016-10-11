@@ -22,8 +22,7 @@ public class Main {
     private static void playGame() {
         int noPlayers = getNoPlayers();
         Game game = new Game(noPlayers);
-        GameDeck deck = new GameDeck();
-        deck.shuffle();
+        game.deck.shuffle();
         int currentPlayer = game.selectRandDealer();
         game.getSelectedPlayers(noPlayers);
         game.startingHand();

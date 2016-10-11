@@ -70,8 +70,7 @@ public class GameDeck {
     public ArrayList<GameCards> getCard(int noCards) {
         ArrayList<GameCards> hand = new ArrayList<GameCards>();
         for (int i = 0; i < noCards; i++) {
-            GameCards dealCards = card.remove(i);
-            hand.add(dealCards);
+            hand.add(card.remove(i));
         }
         return hand;
     }
@@ -84,58 +83,7 @@ public class GameDeck {
         return card;
 */
     }
-
-    /*    public int cardsLeft(){
-            return card.length - cardsUsed;
-        }
-
-    public void addExtraCard(GameCards cards){
-        for (int i = 0; i < NUM_DECK_INIT; i++) {
-            if (cards != null){
-                card.get(i) = cards;
-            }
-        }
-    }
-    public GameCards dealCards(){
-        if (cardsUsed == card.length) {
-            throw new IllegalStateException("Deck is empty.");
-        }
-        cardsUsed++;
-        return card[cardsUsed - 1];
-    }
-    public void startingHand(){
-        int STARTING_HAND = 2;
-        for (int i = 0; i < STARTING_HAND; i++) {
-            for (int j = 0; j < players.size(); j++) {
-                add();
-            }
-        }
-    }
-
-    public void add(){
-        for (int i = 0; i < NUM_DECK_INIT; i++) {
-            for (GameCards c : card) {
-                card[i] = c;
-            }
-        }
-
-    }*/
-
-    //The test to see if the list would print and random
-    /*public String display() {
-        String msg = "";
-        for (GameCards c : card) {
-            msg += c.toString();
-        }
-        return msg;
-    }*/
-
 } //end of class GameDeck
-
-
-//    public ArrayList<GameCards> dealCards(int i) {
-//        return null;
-//    }
 
 
 

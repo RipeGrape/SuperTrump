@@ -1,10 +1,6 @@
 package SuperTrumpGame;
 
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Scanner;
-
+import java.util.*;
 
 public class Game {
     private static final int STARTING_HAND = 2;
@@ -24,7 +20,7 @@ public class Game {
     public int selectRandDealer() {
         Random rand = new Random();
         int dealer = rand.nextInt(noPlayers);
-        System.out.println("Player " + (dealer+1));
+        System.out.println("Player " + (dealer + 1));
         return dealer;
     }
 
@@ -35,44 +31,45 @@ public class Game {
         return players;
     }
 
-    public String playerHand() {
-        String str = "";
-        if (hand == null){
-            throw new NullPointerException("Null Card.");
+    public String showPlayingCard() {
+        String value = "";
+        System.out.print("Card In Play: \n" + value);
+        for (GameCards i : play) {
+            value += i.toString();
         }
-        for (GamePlayers p : players) {
-            str += p.toString();
-        }
-        return str;
+        return value;
     }
-    public void playCard(GameCards card){
-        hand.remove(card);
+
+    public void playCard(int i, int cardIndex) {
+        if (play.size() > 0) {
+            play.remove(0);
+        }
+        GameCards card = players[i].removeCard(cardIndex);
         play.add(card);
     }
 
-    public void addCard(int i){
-        //hand.add(card);
-        GamePlayers player = players[i];
-        ArrayList<GameCards> cards = deck.getCard(1);
-        player.setCards(cards);
+    public void addCard(int i) {
+        players[i].addCard(deck.drawCards());
     }
 
     public void startingHand() {
         players = new GamePlayers[noPlayers];
-            for(int i = 0; i < noPlayers; i++){
-                players[i] = new GamePlayers("Player " + (i+1));
-            }
-        for (GamePlayers player : players){
+        for (int i = 0; i < noPlayers; i++) {
+            players[i] = new GamePlayers("Player " + (i + 1));
+        }
+        for (GamePlayers player : players) {
             ArrayList<GameCards> cards = deck.getCard(STARTING_HAND);
             player.setCards(cards);
         }
     }
 
-    public int switchPlayer(int currentPlayer) {
-        currentPlayer++;
-        if (currentPlayer >= players.length){
-            currentPlayer = 0;
-        }
+    public int switchPlayer(int currentPlayer, boolean skip[]) {
+        do {
+            currentPlayer++;
+            if (currentPlayer >= players.length) {
+                currentPlayer = 0;
+            }
+        }while (skip[currentPlayer] == true);
         /*if(currentPlayer + 1 == playerList.length) {
             for(int i = 0; i < playerList.length; i++) {
                 if(playerList[i] == true) {
@@ -93,24 +90,119 @@ public class Game {
 
     public void gameRound() {
         int round = 0;
-        boolean passTurn = false;
-        int currentValue;
+        String selection = "";
+        String passTurn = "";
+        int cardChoice;
         int currentPlayer = selectRandDealer();
-        boolean[] player = new boolean[players.length];
+        boolean[] playerSkip = new boolean[players.length];
+        boolean firstTurn = false;
+        boolean passingTurn = false;
+        Arrays.fill(playerSkip, false);
 
-        while (round < players.length - 1){
-            System.out.println(currentPlayer);
-            //switchPlayer(currentPlayer);
+        while (round < players.length - 1) {
+            System.out.print(showPlayingCard());
             System.out.println(players[currentPlayer]);
-            Scanner input = new Scanner(System.in);
-            System.out.println("type pass or play: ");
-            String what = input.nextLine();
-            if(Objects.equals(what, "pass")) {
-                //player[currentPlayer] = true;
-                addCard(currentPlayer);
-                round++;
+            if (firstTurn == false) {
+                cardChoice = selectCard();
+                playCard(currentPlayer, cardChoice);
+                System.out.println("Choose the type: (h, g, cl, cr, v)");
+                selection = chooseCategory();
+            } else {
+
+                cardChoice = selectCard();
+                if (Objects.equals(selection, "h")) {
+                    passingTurn = compareHardness(currentPlayer, cardChoice);
+                }
+                else if (Objects.equals(selection, "g")) {
+                    passingTurn = compareGravity(currentPlayer, cardChoice);
+                } else if (Objects.equals(selection, "cl")) {
+                    passingTurn = compareCleavage(currentPlayer, cardChoice);
+                } else if (Objects.equals(selection, "cr")) {
+                    passingTurn = compareCrust(currentPlayer, cardChoice);
+                } else if (Objects.equals(selection, "v")) {
+                    passingTurn = compareValue(currentPlayer, cardChoice);
+                }
+                if (passingTurn == true) {
+                    System.out.println("Type pass to pass");
+                    passTurn = chooseCategory();
+                    if (Objects.equals(passTurn, "pass")) {
+                        playerSkip[currentPlayer] = true;
+                        addCard(currentPlayer);
+                        round++;
+                    }
+                }
             }
-            currentPlayer = switchPlayer(currentPlayer);
+            firstTurn = true;
+            currentPlayer = switchPlayer(currentPlayer, playerSkip);
+
         }
     }
+
+    private boolean compareCleavage(int i, int card) {
+        if (play.get(0).getClevage() < players[i].compareCard(card).getClevage()) {
+            playCard(i, card);
+            return false;
+        }
+        else {
+            System.out.println("This crad doe not beat card in play");
+            return true;
+        }
+    }
+
+    private boolean compareCrust(int i, int card) {
+        if (play.get(0).getCrustAbund() < players[i].compareCard(card).getCrustAbund()) {
+            playCard(i, card);
+            return false;
+        }
+        else {
+            System.out.println("This crad doe not beat card in play");
+            return true;
+        }
+    }
+
+    private boolean compareValue(int i, int card) {
+        if (play.get(0).getEcoValue() < players[i].compareCard(card).getEcoValue()) {
+            playCard(i, card);
+            return false;
+        }
+        else {
+            System.out.println("This crad doe not beat card in play");
+            return true;
+        }
+    }
+
+    private boolean compareGravity(int i, int card) {
+        if (play.get(0).getSpecGravity() < players[i].compareCard(card).getSpecGravity()) {
+            playCard(i, card);
+            return false;
+        }
+        else {
+            System.out.println("This crad doe not beat card in play");
+            return true;
+        }
+    }
+
+    private boolean compareHardness(int i, int card) {
+        if (play.get(0).getHard() < players[i].compareCard(card).getHard()) {
+            playCard(i, card);
+            return false;
+        }
+        else {
+            System.out.println("This card does not beat card in play");
+            return true;
+        }
+    }
+    private String chooseCategory() {
+            Scanner input = new Scanner(System.in);
+            String category = input.nextLine();
+            return category;
+    }
+
+    private int selectCard(){
+        Scanner input = new Scanner(System.in);
+        System.out.println("Choose the card");
+        int value = input.nextInt();
+        return value;
+    }
 } //end of class NewGame
+

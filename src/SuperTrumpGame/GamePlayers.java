@@ -1,7 +1,8 @@
 package SuperTrumpGame;
+import javax.swing.*;
 import java.util.ArrayList;
 
-public class GamePlayers {
+public class GamePlayers extends JPanel{
     private ArrayList<GameCards> cards;
     private String playerId;
 
@@ -20,6 +21,26 @@ public class GamePlayers {
         return cards.remove(card);
     }
     public GameCards compareCard(int card){return cards.get(card);}
+    public boolean containsMag() {return cards.contains("Magnetite");}
+    public void winningCombo(){cards.clear();}
+    public boolean isEmpty(){
+        if(cards.size() == 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public void playersHand(){
+        ImageIcon image;
+        JLabel label;
+        for(GameCards i : cards) {
+            image = new ImageIcon(i.cardPath());
+            label = new JLabel(image);
+            add(label);
+        }
+    }
 
     public String toString(){
         String value = playerId + ": \n";
@@ -29,4 +50,7 @@ public class GamePlayers {
         }
         return value;
     }
+
+
+
 }

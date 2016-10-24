@@ -11,15 +11,19 @@ import java.util.Scanner;
 
 public class SuperTrump extends JFrame implements ActionListener {
     JFrame frame = new JFrame();
+    JPanel players = new JPanel();
     JButton startGame = new JButton( "Start Game" );
     JButton instructions = new JButton( "Instructions" );
+    JButton threePlayers = new JButton( "3 PLAYERS" );
+    JButton fourPlayers = new JButton( "4 PLAYERS" );
+    JButton fivePlayers = new JButton( "5 PLAYERS" );
+    int noPlayers = 0;
 
     public static void main(String[] args){
-        SuperTrump cframe = new SuperTrump();
-        cframe.setSize(350, 240);
+        JFrame cframe = new SuperTrump();
+        cframe.setSize(1000, 700);
         cframe.setVisible(true);
         cframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         System.out.println("Shuffled deck \n");
         //playGame.addActionListener(frame);
         //.add(playGame);
@@ -28,15 +32,16 @@ public class SuperTrump extends JFrame implements ActionListener {
 
     public SuperTrump() {
         super("Super Trump Game");
-        setSize(300,200);
+        setSize(1000,700);
         setLayout(new FlowLayout());
-        add(startGame);
-        add(instructions);
+        add(startGame, BorderLayout.NORTH);
+        add(instructions, BorderLayout.NORTH);
+        add(players, BorderLayout.CENTER);
+        players.setVisible(false);
         startGame.addActionListener(this);
     }
 
-    private static void playGame() {
-        int noPlayers = getNoPlayers();
+   private void playGame() {
         Game game = new Game(noPlayers);
         game.deck.shuffle();
         int dealer = game.selectRandDealer();
@@ -57,18 +62,22 @@ public class SuperTrump extends JFrame implements ActionListener {
         }
     }
 
-    private static int getNoPlayers() {
-        Scanner input = new Scanner(System.in);
-        int noPlayers;
-        System.out.println("How many players? (choose a number between 1-3)");
-        noPlayers = input.nextInt();
-        while ( noPlayers  <3 ||  noPlayers >5){
+    private void getNoPlayers() {
+        JLabel titleOfPlayer = new JLabel("How many players?");
+        players.setVisible(true);
+        players.add(threePlayers);
+        players.add(fourPlayers);
+        players.add(fivePlayers);
+        threePlayers.addActionListener(this);
+        fourPlayers.addActionListener(this);
+        fivePlayers.addActionListener(this);
+        /*while ( noPlayers  <3 ||  noPlayers >5){
             System.out.println("Wrong number of players!");
             System.out.println("How many players? (choose a number between 1-3)");
-            noPlayers = input.nextInt();
-        }
-        System.out.println("Thank you");
-        return noPlayers;
+
+        }*/
+        //System.out.println("Thank you");
+
     }
 
     @Override
@@ -76,6 +85,21 @@ public class SuperTrump extends JFrame implements ActionListener {
         Object source = e.getSource();
         if (source == startGame) {
             startGame.setEnabled(false);
+            getNoPlayers();
+        }
+        else if (source == threePlayers) {
+            noPlayers =3;
+            players.setVisible(false);
+            playGame();
+        }
+        else if (source == fourPlayers) {
+            noPlayers =4;
+            players.setVisible(false);
+            playGame();
+        }
+        else if (source == fivePlayers) {
+            noPlayers = 5;
+            players.setVisible(false);
             playGame();
         }
     }

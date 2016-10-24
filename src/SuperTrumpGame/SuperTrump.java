@@ -73,8 +73,6 @@ public class SuperTrump extends JFrame implements ActionListener {
             System.out.println("How many players? (choose a number between 1-3)");
 
         }*/
-        //System.out.println("Thank you");
-
     }
 
     @Override

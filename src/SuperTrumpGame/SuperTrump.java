@@ -24,10 +24,7 @@ public class SuperTrump extends JFrame implements ActionListener {
         cframe.setSize(1000, 700);
         cframe.setVisible(true);
         cframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        System.out.println("Shuffled deck \n");
-        //playGame.addActionListener(frame);
-        //.add(playGame);
-
+        //System.out.println("Shuffled deck \n");
     }
 
     public SuperTrump() {

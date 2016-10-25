@@ -1,44 +1,67 @@
 package SuperTrumpGame;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.*;
 
-public class Game extends JPanel implements ActionListener {
+public class Game extends JFrame implements ActionListener {
     private static final int STARTING_HAND = 8;
-    private int noPlayers;
     public ArrayList<GamePlayers> players;
     public ArrayList<GameCards> hand;
     public GameDeck deck = new GameDeck();
     public ArrayList<GameCards> play;
-    public int currentPlayer = 0;
-    JButton card[] = new JButton[0];
-    int cardChoice = 0;
+    JPanel mainBoard = new JPanel();
+    JPanel gameBoard = new JPanel();
+    JPanel playerBoard = new JPanel();
+    JPanel numOfPlayers = new JPanel();
+    JButton startGame = new JButton( "Start Game" );
+    JButton instructions = new JButton( "Instructions" );
+    JButton threePlayers = new JButton( "3 PLAYERS" );
+    JButton fourPlayers = new JButton( "4 PLAYERS" );
+    JButton fivePlayers = new JButton( "5 PLAYERS" );
+    int noPlayers = 0;
+    ArrayList<JButton> card = new ArrayList<JButton>();
+    JButton pass = new JButton("Pass");
+    public int cardChoice = 0;
+    private int currentPlayer = 0;
 
-    public Game(int noPlayers) {
-        this.noPlayers = noPlayers;
+    public Game() {
+        super("Super Trump Game");
+        setLayout(new FlowLayout());
+        add(startGame, BorderLayout.NORTH);
+        add(instructions, BorderLayout.NORTH);
+        numOfPlayers.setVisible(false);
+        playerBoard.setVisible(false);
+        startGame.addActionListener(this);
         hand = new ArrayList<>();
         players = new ArrayList<GamePlayers>(noPlayers);
         play = new ArrayList<>();
-        for(int i=0; i< players.get(currentPlayer).handSize(); i++){
-            card[i] = new JButton();
-            card[i].setIcon(new ImageIcon(players.get(currentPlayer).toString()));
-            card[i].setSize(200, 250);
-            card[i].setVisible(true);
-            add(card[i]);
-        }
+        mainBoard.setSize(1200,1000);
+        mainBoard.setVisible(true);
+        mainBoard.add(pass);
     }
 
-    public int selectRandDealer() {
+    public void addButtons() {
+        for (int i = 0; i < players.get(currentPlayer).handSize(); i++) {
+            card.add(new JButton());
+            card.get(i).setIcon(new ImageIcon(players.get(currentPlayer).cardPath()));
+            card.get(i).setSize(100, 150);
+            card.get(i).setVisible(true);
+            playerBoard.add(card.get(i));
+            card.get(i).addActionListener(this);
+        }
+    }
+    public int selectRandDealer(int noPlayers) {
         Random rand = new Random();
         int dealer = rand.nextInt(noPlayers);
         System.out.println("Player " + (dealer + 1));
-        return dealer;
+        return currentPlayer;
     }
 
-    public ArrayList<GamePlayers> getSelectedPlayers(int noPlayers) {
+    public ArrayList<GamePlayers> getSelectedPlayers() {
         for (int i = 0; i < noPlayers; i++) {
             players.add(new GamePlayers("Player " + (i + 1)));
         }
@@ -87,7 +110,7 @@ public class Game extends JPanel implements ActionListener {
         return currentPlayer;
     }
 
-    public int gameRound(int startingPlayer) {
+    public void gameRound() {
         int round = 0;
         String category = "";
         String passTurn = "";
@@ -98,11 +121,11 @@ public class Game extends JPanel implements ActionListener {
         boolean passingTurn = false;
         Arrays.fill(playerSkip, false);
         System.out.println("New Round");
-        currentPlayer = startingPlayer;
 
         while (round < players.size() - 1) {
+            addButtons();
             System.out.print(showPlayingCard());
-            players.get(currentPlayer).playersHand();
+            //players.get(currentPlayer).playersHand();
             //System.out.println(players.get(currentPlayer).toString());
             /*System.out.println("Type pass to pass");
             passTurn = chooseCategory();
@@ -150,7 +173,6 @@ public class Game extends JPanel implements ActionListener {
                         }
                     }
                 }
-            //}
             passingTurn = false;
             winner = checkForWinning(currentPlayer);
             if (winner == true) {
@@ -159,7 +181,6 @@ public class Game extends JPanel implements ActionListener {
             firstTurn = true;
             currentPlayer = switchPlayer(currentPlayer, playerSkip);
         }
-        return currentPlayer;
     }
 
     private String firstTurnOfRound(int currentPlayer, int cardChoice) {
@@ -299,14 +320,71 @@ public class Game extends JPanel implements ActionListener {
             return false;
         }
     }
+    private void playGame() {
+        /*cframe = new Game(noPlayers);
+        cframe.setVisible(true);*/
+        //Game game = new Game(noPlayers);
+        deck.shuffle();
+        selectRandDealer(noPlayers);
+        getSelectedPlayers();
+        startingHand();
+        boolean gameFinish = false;
+        boolean gameCompleteCheck = false;
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        for(int i=0; i< players.get(currentPlayer).handSize(); i++){
-            if(e.getSource() == card[i]){
-                cardChoice = i;
+        while (gameFinish == false){
+            gameRound();
+            gameCompleteCheck = loser();
+            if(gameCompleteCheck) {
+                gameFinish = true;
             }
         }
     }
+
+    private void getNoPlayers() {
+        //This bring up the players choice of the number of players
+        JLabel titleOfPlayer = new JLabel("How many players?");
+        add(titleOfPlayer);
+        add(numOfPlayers);
+        numOfPlayers.setVisible(true);
+        numOfPlayers.add(threePlayers);
+        numOfPlayers.add(fourPlayers);
+        numOfPlayers.add(fivePlayers);
+        threePlayers.addActionListener(this);
+        fourPlayers.addActionListener(this);
+        fivePlayers.addActionListener(this);
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        //The action if that button is pressed
+        Object source = e.getSource();
+        /*for(int i=0; i< players.get(currentPlayer).handSize(); i++){
+            if(source == card.get(i)){
+                cardChoice = i;
+            }
+        }*/
+        if (source == startGame) { //Start Game Button
+            startGame.setEnabled(false);
+            getNoPlayers();
+        }
+        else if (source == threePlayers) { // 3 players button
+            noPlayers =3;
+            numOfPlayers.removeAll();
+            playerBoard.setVisible(true);
+            playGame();
+        }
+        else if (source == fourPlayers) { //4 players button
+            noPlayers =4;
+            numOfPlayers.removeAll();
+            playerBoard.setVisible(true);
+            playGame();
+        }
+        else if (source == fivePlayers) { //5 players button
+            noPlayers = 5;
+            numOfPlayers.removeAll();
+            playerBoard.setVisible(true);
+            playGame();
+        }
+    }
+
 } //end of class NewGame
 

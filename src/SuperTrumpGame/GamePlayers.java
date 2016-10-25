@@ -31,6 +31,7 @@ public class GamePlayers extends JPanel{
             return false;
         }
     }
+    public int handSize(){return cards.size();}
 
     public void playersHand(){
         ImageIcon image;

@@ -1,21 +1,34 @@
 package SuperTrumpGame;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.*;
 
-public class Game {
+public class Game extends JPanel implements ActionListener {
     private static final int STARTING_HAND = 8;
     private int noPlayers;
     public ArrayList<GamePlayers> players;
     public ArrayList<GameCards> hand;
     public GameDeck deck = new GameDeck();
     public ArrayList<GameCards> play;
+    public int currentPlayer = 0;
+    JButton card[] = new JButton[0];
+    int cardChoice = 0;
 
     public Game(int noPlayers) {
         this.noPlayers = noPlayers;
         hand = new ArrayList<>();
         players = new ArrayList<GamePlayers>(noPlayers);
         play = new ArrayList<>();
+        for(int i=0; i< players.get(currentPlayer).handSize(); i++){
+            card[i] = new JButton();
+            card[i].setIcon(new ImageIcon(players.get(currentPlayer).toString()));
+            card[i].setSize(200, 250);
+            card[i].setVisible(true);
+            add(card[i]);
+        }
     }
 
     public int selectRandDealer() {
@@ -74,7 +87,7 @@ public class Game {
         return currentPlayer;
     }
 
-    public int gameRound(int currentPlayer) {
+    public int gameRound(int startingPlayer) {
         int round = 0;
         String category = "";
         String passTurn = "";
@@ -85,6 +98,7 @@ public class Game {
         boolean passingTurn = false;
         Arrays.fill(playerSkip, false);
         System.out.println("New Round");
+        currentPlayer = startingPlayer;
 
         while (round < players.size() - 1) {
             System.out.print(showPlayingCard());
@@ -283,6 +297,15 @@ public class Game {
         }
         else{
             return false;
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        for(int i=0; i< players.get(currentPlayer).handSize(); i++){
+            if(e.getSource() == card[i]){
+                cardChoice = i;
+            }
         }
     }
 } //end of class NewGame

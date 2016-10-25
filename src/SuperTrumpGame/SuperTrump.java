@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class SuperTrump extends JFrame implements ActionListener {
-    JFrame frame = new JFrame();
+    static JFrame cframe = new JFrame();
     JPanel players = new JPanel();
     JButton startGame = new JButton( "Start Game" );
     JButton instructions = new JButton( "Instructions" );
@@ -20,7 +20,7 @@ public class SuperTrump extends JFrame implements ActionListener {
     int noPlayers = 0;
 
     public static void main(String[] args){
-        JFrame cframe = new SuperTrump();
+        cframe = new SuperTrump();
         cframe.setSize(1000, 700);
         cframe.setVisible(true);
         cframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,7 +33,6 @@ public class SuperTrump extends JFrame implements ActionListener {
         setLayout(new FlowLayout());
         add(startGame, BorderLayout.NORTH);
         add(instructions, BorderLayout.NORTH);
-        add(players, BorderLayout.CENTER);
         players.setVisible(false);
         startGame.addActionListener(this);
     }
@@ -60,7 +59,9 @@ public class SuperTrump extends JFrame implements ActionListener {
     }
 
     private void getNoPlayers() {
+        //This bring up the players choice of the number of players
         JLabel titleOfPlayer = new JLabel("How many players?");
+        add(players, BorderLayout.CENTER);
         players.setVisible(true);
         players.add(threePlayers);
         players.add(fourPlayers);
@@ -77,24 +78,25 @@ public class SuperTrump extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        //The action if that button is pressed
         Object source = e.getSource();
-        if (source == startGame) {
+        if (source == startGame) { //Start Game Button
             startGame.setEnabled(false);
             getNoPlayers();
         }
-        else if (source == threePlayers) {
+        else if (source == threePlayers) { // 3 players button
             noPlayers =3;
-            players.setVisible(false);
+            players.removeAll();
             playGame();
         }
-        else if (source == fourPlayers) {
+        else if (source == fourPlayers) { //4 players button
             noPlayers =4;
-            players.setVisible(false);
+            players.removeAll();
             playGame();
         }
-        else if (source == fivePlayers) {
+        else if (source == fivePlayers) { //5 players button
             noPlayers = 5;
-            players.setVisible(false);
+            players.removeAll();
             playGame();
         }
     }

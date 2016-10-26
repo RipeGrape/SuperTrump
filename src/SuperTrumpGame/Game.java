@@ -111,7 +111,6 @@ public class Game extends JFrame implements ActionListener {
         icon.setImage(icon.getImage().getScaledInstance(100, 150, java.awt.Image.SCALE_SMOOTH));
         playingCard.setIcon(icon);
         gameBoard.add(playingCard);
-        switchPlayer();
     }
 
     public void addCard(int i) {
@@ -138,7 +137,7 @@ public class Game extends JFrame implements ActionListener {
         }while (playerSkip[currentPlayer] == true);
     }
 
-    public void gameRound() {
+    /*public void gameRound() {
         int round = 0;
         String category = "";
         String passTurn = "";
@@ -154,13 +153,13 @@ public class Game extends JFrame implements ActionListener {
             System.out.print(showPlayingCard());
             //players.get(currentPlayer).playersHand();
             //System.out.println(players.get(currentPlayer).toString());
-            /*System.out.println("Type pass to pass");
+            *//*System.out.println("Type pass to pass");
             passTurn = chooseCategory();
             if (Objects.equals(passTurn, "pass")) {
                 playerSkip[currentPlayer] = true;
                 addCard(currentPlayer);
                 round++;
-            } else {*/
+            } else {*//*
                 if (firstTurn == false) {
                     cardChoice = selectCard();
 
@@ -201,7 +200,7 @@ public class Game extends JFrame implements ActionListener {
             }
             firstTurn = true;
         }
-    }
+    }*/
 
     private void firstTurnOfRound(int currentPlayer, int cardChoice) {
         if (players.get(currentPlayer).compareCard(cardChoice).getTrump()) {
@@ -210,8 +209,10 @@ public class Game extends JFrame implements ActionListener {
         else {
             System.out.println("Choose the Category type: (h, g, cl, cr, v)");
             chooseCategory();
+            playCard(currentPlayer, cardChoice);
         }
     }
+
 
     private boolean checkForWinning(int currentPlayer) {
         if(players.get(currentPlayer).isEmpty()){
@@ -338,7 +339,6 @@ public class Game extends JFrame implements ActionListener {
             System.out.println("You are the loser" + players.get(0));
         }
         else{
-            addButtons();
         }
     }
     private void playGame() {
@@ -347,12 +347,11 @@ public class Game extends JFrame implements ActionListener {
         if (firstTurnComplete == false) {
             Arrays.fill(playerSkip, false);
             round = 0;
+            firstTurnComplete = true;
         }
-        while (round < players.size() - 1)
         playerPass(playerSkip);
         switchPlayer(playerSkip);
         passTurn = false;
-        firstTurnComplete = true;
         loserCheck();
         newRound();
     }
@@ -390,6 +389,7 @@ public class Game extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         //The action if that button is pressed
+        boolean[] playerSkip = new boolean[players.size()];
         JButton source = (JButton) e.getSource();
         if (source == startGame) { //Start Game Button
             startGame.setEnabled(false);
@@ -408,13 +408,13 @@ public class Game extends JFrame implements ActionListener {
         else if (source == fourPlayers) { //4 players button
             noPlayers =4;
             numOfPlayers.removeAll();
-            addButtons();
-            //playGame();
+            //addButtons();
+            playGame();
         }
         else if (source == fivePlayers) { //5 players button
             noPlayers = 5;
             numOfPlayers.removeAll();
-           // playGame();
+            playGame();
         }
         else if (source == hardButton) {
             category = "h";
@@ -443,8 +443,10 @@ public class Game extends JFrame implements ActionListener {
             players.get(currentPlayer).compareCard(cardChoice);
             if (firstTurnComplete == false){
                 firstTurnOfRound(currentPlayer, cardChoice);
-                playCard(currentPlayer, cardChoice);
             }
+            playerBoard.revalidate();
+            switchPlayer(playerSkip);
+            //playGame();
         }
     }
 

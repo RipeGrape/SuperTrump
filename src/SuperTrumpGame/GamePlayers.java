@@ -37,7 +37,7 @@ public class GamePlayers extends JPanel{
 
     public String[] cardPaths(){
         String[] paths = new String[cards.size()];
-        for(int i = 0; i < cards.size(); ++i)
+        for(int i = 0; i < cards.size(); i++)
         {
             paths[i] = cards.get(i).cardPath();
         }

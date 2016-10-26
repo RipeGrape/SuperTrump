@@ -24,8 +24,6 @@ public class GameCards extends JFrame {
         this.crustAbund = ca;
         this.ecoValue = ev;
         this.trump = t;
-        File imageName = new File("E:\\cp2406 Programming II\\ColbranKaineA1\\images\\", name + ".jpg");
-        //this.image = ImageIO.read(imageName);
     }
 
     public String getName() {
@@ -61,7 +59,8 @@ public class GameCards extends JFrame {
             return image;
         }*/
     public String cardPath() {
-        return "E:\\cp2406 Programming II\\ColbranKaineA1\\images\\"+getName()+".jpg";
+        return /*"E:\\cp2406 Programming II\\ColbranKaineA1\\images\\"+*/getName()+".jpg";
+
     }
 
     public String toString(){

@@ -8,12 +8,14 @@ public class GamePlayers extends JPanel{
 
     public GamePlayers(String s) {
         this.playerId = s;
+
     }
 
     public void setCards(ArrayList<GameCards> card) {
         this.cards = card;
     }
 
+    public String getPlayerId(){return playerId;}
     public void addCard(GameCards card){
         cards.add(card);
     }
@@ -33,18 +35,19 @@ public class GamePlayers extends JPanel{
     }
     public int handSize(){return cards.size();}
 
-    public void playersHand(){
-        ImageIcon image;
-        JLabel label;
-        for(GameCards i : cards) {
-            image = new ImageIcon(i.cardPath());
-            label = new JLabel(image);
-            add(label);
+    public String[] cardPaths(){
+        String[] paths = new String[cards.size()];
+        for(int i = 0; i < cards.size(); ++i)
+        {
+            paths[i] = cards.get(i).cardPath();
         }
+        return paths;
     }
 
     public String toString(){
         String value = playerId + ": \n";
+        if (cards == null) return value;
+
         for(GameCards i : cards)
         {
             value += i.toString();

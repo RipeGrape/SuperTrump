@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.*;
 
 public class Game extends JFrame implements ActionListener {
@@ -19,6 +18,7 @@ public class Game extends JFrame implements ActionListener {
     JPanel selectionBoard = new JPanel();
     JPanel playerBoard = new JPanel();
     JPanel numOfPlayers = new JPanel();
+    JLabel playingCard = new JLabel();
     JButton startGame = new JButton( "Start Game" );
     JButton instructions = new JButton( "Instructions" );
     JButton threePlayers = new JButton( "3 PLAYERS" );
@@ -36,13 +36,16 @@ public class Game extends JFrame implements ActionListener {
     int noPlayers = 0;
     private boolean firstTurnComplete = false;
     private String category ="";
-
+    int round = 0;
+    boolean passTurn = false;
 
     public Game() {
         super("Super Trump Game");
         setLayout(new FlowLayout());
         add(startGame, BorderLayout.NORTH);
         add(instructions, BorderLayout.NORTH);
+        add(gameBoard);
+        gameBoard.setVisible(true);
         numOfPlayers.setVisible(false);
         playerBoard.setVisible(false);
         selectionBoard.setVisible(false);
@@ -104,8 +107,11 @@ public class Game extends JFrame implements ActionListener {
         GameCards card = players.get(i).removeCard(cardIndex);
         play.add(card);
         ImageIcon icon = new ImageIcon(getClass().getResource(showPlayingCard()));
-        play.get(0).setPreferredSize(new Dimension(100, 150));
+        playingCard.setPreferredSize(new Dimension(100, 150));
         icon.setImage(icon.getImage().getScaledInstance(100, 150, java.awt.Image.SCALE_SMOOTH));
+        playingCard.setIcon(icon);
+        gameBoard.add(playingCard);
+        switchPlayer();
     }
 
     public void addCard(int i) {
@@ -123,14 +129,13 @@ public class Game extends JFrame implements ActionListener {
         }
     }
 
-    public int switchPlayer(int currentPlayer, boolean skip[]) {
+    public void switchPlayer(boolean playerSkip[]) {
         do {
             currentPlayer++;
             if (currentPlayer >= players.size()) {
                 currentPlayer = 0;
             }
-        }while (skip[currentPlayer] == true);
-        return currentPlayer;
+        }while (playerSkip[currentPlayer] == true);
     }
 
     public void gameRound() {
@@ -138,14 +143,14 @@ public class Game extends JFrame implements ActionListener {
         String category = "";
         String passTurn = "";
         int cardChoice;
-        boolean[] playerSkip = new boolean[players.size()];
+
         boolean firstTurn = false;
         boolean winner = false;
         boolean passingTurn = false;
         Arrays.fill(playerSkip, false);
         System.out.println("New Round");
 
-        while (round < players.size() - 1) {
+         {
             System.out.print(showPlayingCard());
             //players.get(currentPlayer).playersHand();
             //System.out.println(players.get(currentPlayer).toString());
@@ -163,8 +168,7 @@ public class Game extends JFrame implements ActionListener {
                     while (passingTurn == false) {
                         //passTurn = chooseCategory();
                         if (Objects.equals(passTurn, "pass")) {
-                            playerSkip[currentPlayer] = true;
-                            addCard(currentPlayer);
+
                             round++;
                         } else {
                             cardChoice = selectCard();
@@ -196,7 +200,6 @@ public class Game extends JFrame implements ActionListener {
                 playerSkip[currentPlayer] = true;
             }
             firstTurn = true;
-            currentPlayer = switchPlayer(currentPlayer, playerSkip);
         }
     }
 
@@ -207,7 +210,6 @@ public class Game extends JFrame implements ActionListener {
         else {
             System.out.println("Choose the Category type: (h, g, cl, cr, v)");
             chooseCategory();
-            playCard(currentPlayer, cardChoice);
         }
     }
 
@@ -331,30 +333,44 @@ public class Game extends JFrame implements ActionListener {
         return value;
     }
 
-    public boolean loser() {
+    public void loserCheck() {
         if(players.size() == 1){
             System.out.println("You are the loser" + players.get(0));
-            return true;
         }
         else{
-            return false;
+            addButtons();
         }
     }
     private void playGame() {
-        /*cframe = new Game(noPlayers);
-        cframe.setVisible(true);*/
-        //Game game = new Game(noPlayers);
+        boolean[] playerSkip = new boolean[players.size()];
 
-        selectRandDealer(noPlayers);
-        boolean gameFinish = false;
-        boolean gameCompleteCheck = false;
+        if (firstTurnComplete == false) {
+            Arrays.fill(playerSkip, false);
+            round = 0;
+        }
+        while (round < players.size() - 1)
+        playerPass(playerSkip);
+        switchPlayer(playerSkip);
+        passTurn = false;
+        firstTurnComplete = true;
+        loserCheck();
+        newRound();
+    }
 
-        while (gameFinish == false){
-            gameRound();
-            gameCompleteCheck = loser();
-            if(gameCompleteCheck) {
-                gameFinish = true;
-            }
+    private void newRound() {
+        if (round < players.size() - 1){
+            firstTurnComplete = false;
+        }
+    }
+
+    private boolean playerPass(boolean[] playerSkip) {
+        if(passTurn == true){
+            addCard(currentPlayer);
+            round++;
+            return playerSkip[currentPlayer] = true;
+        }
+        else {
+            return playerSkip[currentPlayer] =false;
         }
     }
 
@@ -385,6 +401,7 @@ public class Game extends JFrame implements ActionListener {
 
             getSelectedPlayers();
             startingHand();
+            selectRandDealer(noPlayers);
             addButtons();
             //playGame();
         }
@@ -401,23 +418,23 @@ public class Game extends JFrame implements ActionListener {
         }
         else if (source == hardButton) {
             category = "h";
-            playCard(currentPlayer, cardChoice);
+            //playCard(currentPlayer, cardChoice);
         }
         else if (source == gravButton) {
             category = "g";
-            playCard(currentPlayer, cardChoice);
+            //playCard(currentPlayer, cardChoice);
         }
         else if (source == clevButton) {
             category = "cl";
-            playCard(currentPlayer, cardChoice);
+            //playCard(currentPlayer, cardChoice);
         }
         else if (source == crustButton) {
             category = "cr";
-            playCard(currentPlayer, cardChoice);
+            //playCard(currentPlayer, cardChoice);
         }
         else if (source == valueButton) {
             category = "v";
-            playCard(currentPlayer, cardChoice);
+            //playCard(currentPlayer, cardChoice);
         }
         // assume here that we have a card button pressed
         else {
@@ -427,10 +444,7 @@ public class Game extends JFrame implements ActionListener {
             if (firstTurnComplete == false){
                 firstTurnOfRound(currentPlayer, cardChoice);
                 playCard(currentPlayer, cardChoice);
-
             }
-
-            //cardChoice = cardButton();
         }
     }
 

@@ -9,44 +9,35 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class SuperTrump extends JFrame implements ActionListener {
+public class SuperTrump extends JFrame{
     static JFrame cframe = new JFrame();
-    JPanel players = new JPanel();
-    JButton startGame = new JButton( "Start Game" );
-    JButton instructions = new JButton( "Instructions" );
-    JButton threePlayers = new JButton( "3 PLAYERS" );
-    JButton fourPlayers = new JButton( "4 PLAYERS" );
-    JButton fivePlayers = new JButton( "5 PLAYERS" );
-    int noPlayers = 0;
+    static JFrame gamePane = new JFrame();
+    JPanel numOfPlayers = new JPanel();
+
+
 
     public static void main(String[] args){
-        cframe = new SuperTrump();
-        cframe.setSize(1000, 700);
+        cframe = new Game();
+        cframe.setSize(1200, 1000);
         cframe.setVisible(true);
         cframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //System.out.println("Shuffled deck \n");
+        /*gamePane = new Game();
+        gamePane.setVisible(false);
+        gamePane.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //System.out.println("Shuffled deck \n");*/
     }
 
-    public SuperTrump() {
-        super("Super Trump Game");
-        setSize(1000,700);
-        setLayout(new FlowLayout());
-        add(startGame, BorderLayout.NORTH);
-        add(instructions, BorderLayout.NORTH);
-        players.setVisible(false);
-        startGame.addActionListener(this);
-    }
 
-   private void playGame() {
+    /*private void playGame() {
+        *//*cframe = new Game(noPlayers);
+        cframe.setVisible(true);*//*
         Game game = new Game(noPlayers);
         game.deck.shuffle();
-        int dealer = game.selectRandDealer();
-        game.getSelectedPlayers(noPlayers);
+        int dealer = game.selectRandDealer(noPlayers);
+        game.getSelectedPlayers();
         game.startingHand();
-        //boolean[] winners = new boolean[noPlayers];
         boolean gameFinish = false;
         boolean gameCompleteCheck = false;
-
 
         while (gameFinish == false){
             int startingPlayer = dealer;
@@ -61,22 +52,23 @@ public class SuperTrump extends JFrame implements ActionListener {
     private void getNoPlayers() {
         //This bring up the players choice of the number of players
         JLabel titleOfPlayer = new JLabel("How many players?");
-        add(players, BorderLayout.CENTER);
-        players.setVisible(true);
-        players.add(threePlayers);
-        players.add(fourPlayers);
-        players.add(fivePlayers);
+        add(titleOfPlayer);
+        add(numOfPlayers);
+        numOfPlayers.setVisible(true);
+        numOfPlayers.add(threePlayers);
+        numOfPlayers.add(fourPlayers);
+        numOfPlayers.add(fivePlayers);
         threePlayers.addActionListener(this);
         fourPlayers.addActionListener(this);
         fivePlayers.addActionListener(this);
-        /*while ( noPlayers  <3 ||  noPlayers >5){
+        *//*while ( noPlayers  <3 ||  noPlayers >5){
             System.out.println("Wrong number of players!");
             System.out.println("How many players? (choose a number between 1-3)");
 
-        }*/
-    }
+        }
+    }*/
 
-    @Override
+    /*@Override
     public void actionPerformed(ActionEvent e) {
         //The action if that button is pressed
         Object source = e.getSource();
@@ -86,19 +78,19 @@ public class SuperTrump extends JFrame implements ActionListener {
         }
         else if (source == threePlayers) { // 3 players button
             noPlayers =3;
-            players.removeAll();
+            numOfPlayers.removeAll();
             playGame();
         }
         else if (source == fourPlayers) { //4 players button
             noPlayers =4;
-            players.removeAll();
+            numOfPlayers.removeAll();
             playGame();
         }
         else if (source == fivePlayers) { //5 players button
             noPlayers = 5;
-            players.removeAll();
+            numOfPlayers.removeAll();
             playGame();
-        }
-    }
+        }*/
 }
+
 
